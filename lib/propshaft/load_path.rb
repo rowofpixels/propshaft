@@ -44,7 +44,7 @@ class Propshaft::LoadPath
 
   private
     def assets_by_path
-      @cached_assets_by_path ||= Hash.new.tap do |mapped|
+      Hash.new.tap do |mapped|
         paths.each do |path|
           without_dotfiles(all_files_from_tree(path)).each do |file|
             logical_path = file.relative_path_from(path)
@@ -53,6 +53,17 @@ class Propshaft::LoadPath
         end
       end
     end
+
+    # def assets_by_path
+    #   @cached_assets_by_path ||= Hash.new.tap do |mapped|
+    #     paths.each do |path|
+    #       without_dotfiles(all_files_from_tree(path)).each do |file|
+    #         logical_path = file.relative_path_from(path)
+    #         mapped[logical_path.to_s] ||= Propshaft::Asset.new(file, logical_path: logical_path, version: version)
+    #       end if path.exist?
+    #     end
+    #   end
+    # end
 
     def all_files_from_tree(path)
       path.children.flat_map { |child| child.directory? ? all_files_from_tree(child) : child }
